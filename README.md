@@ -10,10 +10,13 @@ To use, edit the source and set the correct hostname and port for your setup and
 
 Controls
 --------
+ - q - Quit
  - w - Up
  - a - Left
  - s - Down
  - d - Right
+ - b - Back
  - h - Home
  - r - Select
- - q - Quit
+ - space - Play/Pause (Hopefully)
+ - p - Get Active Players (Doesn't do anything unless you uncomment the print)
