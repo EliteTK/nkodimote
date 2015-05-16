@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import json
 import socket
 import curses
@@ -42,8 +43,6 @@ if __name__ == "__main__":
                 call_rpc("Input.Right")
             elif c == ord('b'):
                 call_rpc("Input.Back")
-            elif c == ord('f'):
-                call_rpc("Input.Fullscreen")
             elif c == ord('h'):
                 call_rpc("Input.Home")
             elif c == ord('r'):
