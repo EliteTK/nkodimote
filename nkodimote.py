@@ -13,25 +13,27 @@ headers  = {
 curr_id = 0
 
 actions = {
-    "w": ("Input.Up",               ),
-    "a": ("Input.Left",             ),
-    "s": ("Input.Down",             ),
-    "d": ("Input.Right",            ),
-    "b": ("Input.Back",             ),
-    "h": ("Input.Home",             ),
-    "r": ("Input.Select",           ),
-    " ": ("Player.PlayPause",      1),
-    "p": ("Player.GetActivePlayers",)
+    "w": ("Input.Up", ),
+    "a": ("Input.Left", ),
+    "s": ("Input.Down", ),
+    "d": ("Input.Right", ),
+    "b": ("Input.Back", ),
+    "h": ("Input.Home", ),
+    "r": ("Input.Select", ),
+    " ": ("Player.PlayPause", 1),
+    "p": ("Player.GetActivePlayers", )
 }
 
 def call_rpc(method, *params):
     global curr_id
+
     jsonrpc = {
         'jsonrpc': '2.0',
-        'method' : method,
-        'params' : params,
-        'id'     : curr_id
+        'method': method,
+        'params': params,
+        'id': curr_id
     }
+
     curr_id += 1
 
     r = requests.post(url, headers=headers, data=json.dumps(jsonrpc))
@@ -39,19 +41,15 @@ def call_rpc(method, *params):
     return r.json()
 
 def main(stdscr):
-    try:
-        while True:
-            c = stdscr.getch()
-            if c == ord('q'):
-                break
-            else:
-                try:
-                    call_rpc(*actions[chr(c)])
-                except KeyError:
-                    pass
-
-    except Exception as e:
-        raise e
+    while True:
+        c = stdscr.getch()
+        if c == ord('q'):
+            break
+        else:
+            try:
+                call_rpc(*actions[chr(c)])
+            except KeyError:
+                pass
 
 if __name__ == "__main__":
     curses.wrapper(main)
