@@ -3,29 +3,43 @@
 import json
 import curses
 import requests
+from itertools import islice
+import math
 
 instructions = """nkodimote v0.1
 Controls:
- - q     : Quit
- - w     : Up
- - a     : Left
- - s     : Down
- - d     : Right
- - b     : Back
- - h     : Home
- - enter : Select
- - space : Play/Pause (Hopefully)
- - ,     : seek backwards (short)
- - .     : seek forwards (short)
- - <     : seek backwards (long)
- - >     : seek forwards (long)
- - -     : voldown 1
- - =     : volup 1
- - _     : voldown 5
- - +     : volup 5
+|[  q  ] Quit
+|[  w  ] Up
+|[  a  ] Left
+|[  s  ] Down
+|[  d  ] Right
+|[  b  ] Back
+|[  h  ] Home
+|[enter] Select
+|[space] Play/Pause
+|[  ,  ] Seek Back (short)
+|[  .  ] Seek Forw (short)
+|[  <  ] Seek Back (long)
+|[  >  ] Seek Forw (long)
+|[  -  ] Voldown 1
+|[  =  ] Volup 1
+|[  _  ] Voldown 5
+|[  +  ] Volup 5
 """
-url      = 'http://tk-oc1.local/jsonrpc'
-headers  = {
+
+instructions_lines = instructions.split('\n')
+instructions_height = len(instructions_lines)
+instructions_width = 0
+
+for line in instructions_lines:
+    line_length = len(line)
+    if instructions_width < line_length:
+        instructions_width = line_length
+
+instructions_width += 1
+
+url     = 'http://tk-oc1.local/jsonrpc'
+headers = {
     'User-Agent': 'nkodimote/0.1',
     'Content-Type': 'application/json'
 }
@@ -83,8 +97,32 @@ def handle_key(key):
         except KeyError:
             pass
 
+def print_col(stdscr, x, y, lineno, lines, width):
+    for line in islice(instructions_lines, lineno, lineno + lines):
+        stdscr.move(y, x)
+        stdscr.addnstr(line, width)
+        y += 1
+
+def print_instructions(stdscr):
+    height, width = stdscr.getmaxyx()
+    maxwidth = instructions_width
+    maxheight = instructions_height
+    cols = 1
+
+    if width < instructions_width:
+        maxwidth = width
+
+    if height < instructions_height:
+        maxheight = height
+        cols = math.ceil(instructions_height / height)
+        if maxwidth > int(width / cols):
+            maxwidth = int(width / cols)
+
+    for col in range(cols):
+        print_col(stdscr, col * maxwidth, 0, col * maxheight, maxheight, maxwidth)
+
 def main(stdscr):
-    stdscr.addstr(instructions)
+    print_instructions(stdscr)
     while True:
         c = stdscr.getch()
         if c == ord('q'):
