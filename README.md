@@ -8,6 +8,8 @@ Patches and pull requests welcome.
 
 To use, edit the source and set the correct hostname and port for your setup and then run (python3).
 
+![Interface](interface.png)
+
 Controls
 --------
  - q - Quit
