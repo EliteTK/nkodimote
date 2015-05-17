@@ -17,6 +17,13 @@ Controls
  - d - Right
  - b - Back
  - h - Home
- - r - Select
+ - enter - Select
  - space - Play/Pause (Hopefully)
- - p - Get Active Players (Doesn't do anything unless you uncomment the print)
+ - , - seek backwards (short)
+ - . - seek forwards (short)
+ - < - seek backwards (long)
+ - > - seek forwards (long)
+ - - - voldown 1
+ - = - volup 1
+ - _ - voldown 5
+ - + - volup 5

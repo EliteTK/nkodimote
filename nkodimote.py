@@ -12,16 +12,26 @@ headers  = {
 
 curr_id = 0
 
-actions = {
-    "w": ("Input.Up", ),
-    "a": ("Input.Left", ),
-    "s": ("Input.Down", ),
-    "d": ("Input.Right", ),
-    "b": ("Input.Back", ),
-    "h": ("Input.Home", ),
-    "r": ("Input.Select", ),
+actions_basic = {
+    "w": ("Input.Up",),
+    "a": ("Input.Left",),
+    "s": ("Input.Down",),
+    "d": ("Input.Right",),
+    "b": ("Input.Back",),
+    "h": ("Input.Home",),
+    "\n": ("Input.Select",),
     " ": ("Player.PlayPause", 1),
-    "p": ("Player.GetActivePlayers", )
+    ",": ("Player.Seek", 1, "smallbackward"),
+    ".": ("Player.Seek", 1, "smallforward"),
+    "<": ("Player.Seek", 1, "bigbackward"),
+    ">": ("Player.Seek", 1, "bigforward"),
+}
+
+actions_eval = {
+    "-": "volchg(-1)",
+    "=": "volchg(1)",
+    "_": "volchg(-5)",
+    "+": "volchg(5)"
 }
 
 def call_rpc(method, *params):
@@ -40,6 +50,19 @@ def call_rpc(method, *params):
 
     return r.json()
 
+def volchg(amount):
+    curr_vol = call_rpc("Application.GetProperties", ("volume", ))['result']['volume']
+    call_rpc("Application.SetVolume", curr_vol + amount)
+
+def handle_key(key):
+    try:
+        call_rpc(*actions_basic[chr(key)])
+    except KeyError:
+        try:
+            eval(actions_eval[chr(key)])
+        except KeyError:
+            pass
+
 def main(stdscr):
     while True:
         c = stdscr.getch()
@@ -47,7 +70,7 @@ def main(stdscr):
             break
         else:
             try:
-                call_rpc(*actions[chr(c)])
+                handle_key(c)
             except KeyError:
                 pass
 
