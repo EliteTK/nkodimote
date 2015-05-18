@@ -99,14 +99,16 @@ def handle_key(key):
 
 def print_col(stdscr, x, y, lineno, lines, width):
     for line in islice(instructions_lines, lineno, lineno + lines):
-        stdscr.move(y, x)
-        stdscr.addnstr(line, width)
+        stdscr.addnstr(y, x, line, width)
         y += 1
 
 def print_instructions(stdscr):
+    stdscr.clear()
+
     height, width = stdscr.getmaxyx()
     maxwidth = instructions_width
     maxheight = instructions_height
+
     cols = 1
 
     if width < instructions_width:
@@ -118,12 +120,14 @@ def print_instructions(stdscr):
         if maxwidth > int(width / cols):
             maxwidth = int(width / cols)
 
+    stdscr.refresh()
+
     for col in range(cols):
         print_col(stdscr, col * maxwidth, 0, col * maxheight, maxheight, maxwidth)
 
 def main(stdscr):
-    print_instructions(stdscr)
     while True:
+        print_instructions(stdscr)
         c = stdscr.getch()
         if c == ord('q'):
             break
